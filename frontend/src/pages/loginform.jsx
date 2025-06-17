@@ -39,11 +39,17 @@ const Login = ({ setIsAuthenticated }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const payload = isAdmin ? { userId, password } : { userId };
+      const trimmedUserId = userId.trim();
+      const trimmedPassword = password.trim();
+
+      const payload = isAdmin 
+        ? { userId: trimmedUserId, password: trimmedPassword } 
+        : { userId: trimmedUserId };
+
       const res = await axios.post("http://localhost:5000/auth/login", payload);
 
       if (isAdmin && res) {
-        await axios.get(`http://localhost:5000/auth/userDetails/${userId}`);
+        await axios.get(`http://localhost:5000/auth/userDetails/${trimmedUserId}`);
       }
 
       sessionStorage.setItem("token", JSON.stringify(res.data.token));
